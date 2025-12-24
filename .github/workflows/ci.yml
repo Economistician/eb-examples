@@ -20,8 +20,7 @@ jobs:
       - name: Upgrade packaging tools
         run: python -m pip install -U pip setuptools wheel
 
-      # IMPORTANT: eb-examples depends on sibling repos in the ElectricBarometer org folder layout.
-      # We checkout those repos into sibling directories so editable installs work correctly.
+      # Sibling repos are checked out into the workspace so editable installs work.
       - name: Checkout eb-metrics
         uses: actions/checkout@v4
         with:
@@ -34,12 +33,14 @@ jobs:
           repository: Economistician/eb-evaluation
           path: eb-evaluation
 
+      - name: Install test runner
+        run: python -m pip install -U pytest
+
       - name: Install ecosystem (editable)
         run: |
-          python -m pip install pytest
           python -m pip install -e .
           python -m pip install -e .\eb-metrics
           python -m pip install -e .\eb-evaluation
 
-      - name: Run tests
-        run: pytest -q
+      - name: Run eb-examples smoke tests only
+        run: python -m pytest -q tests
