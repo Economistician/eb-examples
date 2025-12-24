@@ -9,7 +9,7 @@ jobs:
     runs-on: windows-latest
 
     steps:
-      - name: Checkout
+      - name: Checkout eb-examples
         uses: actions/checkout@v4
 
       - name: Set up Python
@@ -21,7 +21,7 @@ jobs:
         run: python -m pip install -U pip setuptools wheel
 
       # IMPORTANT: eb-examples depends on sibling repos in the ElectricBarometer org folder layout.
-      # We checkout those repos into sibling directories so `pip install -e ..\eb-metrics` works.
+      # We checkout those repos into sibling directories so editable installs work correctly.
       - name: Checkout eb-metrics
         uses: actions/checkout@v4
         with:
@@ -36,6 +36,7 @@ jobs:
 
       - name: Install ecosystem (editable)
         run: |
+          python -m pip install pytest
           python -m pip install -e .
           python -m pip install -e .\eb-metrics
           python -m pip install -e .\eb-evaluation
