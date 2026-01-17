@@ -1,0 +1,20 @@
+name: PyPI Smoke Test
+
+on:
+  schedule:
+    - cron: "0 0 * * 0" # Weekly on Sundays
+  workflow_run:
+    workflows: ["Release to PyPI"]
+    types:
+      - completed
+  workflow_dispatch:
+
+jobs:
+  smoke-test:
+    # Only run if the release was a success, OR if it's a scheduled/manual run
+    if: ${{ github.event.workflow_run.conclusion == 'success' || github.event_name != 'workflow_run' }}
+    uses: Economistician/eb-integration/.github/workflows/pypi-smoke.yml@main
+    with:
+      python-version: "3.13"
+      package: "eb-examples"
+      import_module: "eb_examples"
