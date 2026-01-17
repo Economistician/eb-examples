@@ -118,13 +118,12 @@ def main() -> None:
     artifacts = GoldenV1Artifacts(base=base_dir)
 
     # Load via stable API (no hardcoded paths)
-    from eb_examples.datasets import load_demo_golden_v1
-
     # Canonical adapter + spec from eb-adapters
     from eb_adapters.contracts.demand_panel.v1.qsr.entity_usage_interval_panel import (
         QSRIntervalPanelDemandSpecV1,
         to_panel_demand_v1,
     )
+    from eb_examples.datasets import load_demo_golden_v1
 
     df_raw = load_demo_golden_v1()
     df = _coerce_types(df_raw)
@@ -156,7 +155,9 @@ def main() -> None:
     print("Contractify OK")
     print(f"- input rows: {df_raw.shape[0]}")
     print(f"- base-dir:  {artifacts.base}")
-    print(f"- output:    {artifacts.panel_demand_v1.relative_to(artifacts.base.parent.parent.parent)}")
+    print(
+        f"- output:    {artifacts.panel_demand_v1.relative_to(artifacts.base.parent.parent.parent)}"
+    )
 
 
 if __name__ == "__main__":

@@ -17,10 +17,10 @@ Console script behavior:
 from __future__ import annotations
 
 import argparse
-import subprocess
-import sys
 from dataclasses import dataclass
 from pathlib import Path
+import subprocess
+import sys
 
 
 def _repo_root() -> Path:
@@ -33,7 +33,9 @@ def _repo_root() -> Path:
     for parent in [p.parent, *p.parents]:
         if (parent / "pyproject.toml").exists():
             return parent
-    raise FileNotFoundError("Could not locate repo root (pyproject.toml not found when walking upward).")
+    raise FileNotFoundError(
+        "Could not locate repo root (pyproject.toml not found when walking upward)."
+    )
 
 
 def _resolve_base_dir(base_dir: str | None, *, repo_root: Path) -> Path:
@@ -75,7 +77,9 @@ def _run_step(step: Step, *, repo_root: Path, base_dir: Path | None) -> None:
 
     proc = subprocess.run(cmd, cwd=str(repo_root))
     if proc.returncode != 0:
-        raise SystemExit(f"\nFAILED: {step.name} (exit={proc.returncode})\nCommand: {' '.join(cmd)}")
+        raise SystemExit(
+            f"\nFAILED: {step.name} (exit={proc.returncode})\nCommand: {' '.join(cmd)}"
+        )
 
 
 def _print_outputs(repo_root: Path, *, base_dir: Path) -> None:
@@ -147,7 +151,9 @@ def _cmd_demo(args: argparse.Namespace) -> int:
     print(f"- demo:     {args.demo_name}")
     print(f"- repo:     {repo_root}")
     print(f"- steps:    {len(steps)}")
-    print(f"- base-dir: {base_dir.relative_to(repo_root) if str(base_dir).startswith(str(repo_root)) else base_dir}")
+    print(
+        f"- base-dir: {base_dir.relative_to(repo_root) if str(base_dir).startswith(str(repo_root)) else base_dir}"
+    )
     print(f"- fas:      {'enabled' if (not args.no_fas) else 'disabled'}")
 
     for step in steps:
@@ -167,7 +173,9 @@ def build_parser() -> argparse.ArgumentParser:
 
     demo = sub.add_parser("demo", help="Run a demo pipeline")
     demo.add_argument("demo_name", help="Demo name (e.g., golden-v1)")
-    demo.add_argument("--base-dir", default=None, help="Output base directory (absolute or repo-relative)")
+    demo.add_argument(
+        "--base-dir", default=None, help="Output base directory (absolute or repo-relative)"
+    )
     demo.add_argument("--no-fas", action="store_true", help="Skip optional FAS step")
     demo.add_argument("--steps", action="store_true", help="Print the ordered steps and exit")
     demo.set_defaults(func=_cmd_demo)

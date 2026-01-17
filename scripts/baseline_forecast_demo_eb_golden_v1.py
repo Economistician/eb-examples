@@ -71,7 +71,9 @@ def main() -> None:
     }
     missing = sorted(required - set(demand.columns))
     if missing:
-        raise ValueError(f"panel_demand_v1 missing required columns: {missing}. Got: {list(demand.columns)}")
+        raise ValueError(
+            f"panel_demand_v1 missing required columns: {missing}. Got: {list(demand.columns)}"
+        )
 
     # Ensure timestamp dtype
     demand = demand.copy()
@@ -83,7 +85,9 @@ def main() -> None:
     baseline = hist.groupby(grp_cols, as_index=False)["y"].mean().rename(columns={"y": "y_pred"})
 
     # Join baseline back to all rows (dense forecast over full scaffold)
-    out = demand[["site_id", "forecast_entity_id", "INTERVAL_30_INDEX", "INTERVAL_START_TS", "y"]].merge(
+    out = demand[
+        ["site_id", "forecast_entity_id", "INTERVAL_30_INDEX", "INTERVAL_START_TS", "y"]
+    ].merge(
         baseline,
         on=grp_cols,
         how="left",
@@ -96,7 +100,9 @@ def main() -> None:
     # Build forecast-contract frame
     fcst = pd.DataFrame(
         {
-            "entity_id": out.apply(lambda r: _make_entity_id(r["site_id"], r["forecast_entity_id"]), axis=1),
+            "entity_id": out.apply(
+                lambda r: _make_entity_id(r["site_id"], r["forecast_entity_id"]), axis=1
+            ),
             "interval_start": out["INTERVAL_START_TS"],
             "y_true": out["y"],  # may be NA for future scaffold (allowed)
             "y_pred": out["y_pred"],  # baseline prediction

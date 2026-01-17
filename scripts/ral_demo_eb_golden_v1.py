@@ -28,7 +28,9 @@ from eb_examples.paths import GoldenV1Artifacts, resolve_base_dir
 
 
 def _parse_args() -> argparse.Namespace:
-    p = argparse.ArgumentParser(description="Apply RAL under governance permissions (eb_golden_v1 demo)")
+    p = argparse.ArgumentParser(
+        description="Apply RAL under governance permissions (eb_golden_v1 demo)"
+    )
     p.add_argument(
         "--base-dir",
         default=None,
@@ -40,7 +42,9 @@ def _parse_args() -> argparse.Namespace:
 def _parse_forecast_entity_id(entity_id: str) -> str:
     parts = str(entity_id).split("::", 1)
     if len(parts) != 2:
-        raise ValueError(f"Unexpected entity_id format: {entity_id!r} (expected 'site_id::forecast_entity_id')")
+        raise ValueError(
+            f"Unexpected entity_id format: {entity_id!r} (expected 'site_id::forecast_entity_id')"
+        )
     return parts[1]
 
 
@@ -67,12 +71,16 @@ def main() -> None:
     required_fcst = {"entity_id", "interval_start", "y_pred"}
     missing = sorted(required_fcst - set(fcst.columns))
     if missing:
-        raise ValueError(f"panel_point_forecast_v1 missing required columns: {missing}. Got: {list(fcst.columns)}")
+        raise ValueError(
+            f"panel_point_forecast_v1 missing required columns: {missing}. Got: {list(fcst.columns)}"
+        )
 
     required_gov = {"forecast_entity_id", "allow_adjustment"}
     missing = sorted(required_gov - set(gov.columns))
     if missing:
-        raise ValueError(f"governance_v1 missing required columns: {missing}. Got: {list(gov.columns)}")
+        raise ValueError(
+            f"governance_v1 missing required columns: {missing}. Got: {list(gov.columns)}"
+        )
 
     # Determine permission per forecast_entity_id
     gov_map: dict[str, bool] = (
@@ -86,7 +94,9 @@ def main() -> None:
     out["forecast_entity_id"] = out["entity_id"].map(_parse_forecast_entity_id)
 
     # Permission lookup (missing => False)
-    out["allow_adjustment"] = out["forecast_entity_id"].map(lambda x: bool(gov_map.get(str(x), False)))
+    out["allow_adjustment"] = out["forecast_entity_id"].map(
+        lambda x: bool(gov_map.get(str(x), False))
+    )
 
     # Identity RAL (no-op). In demo: we keep y_pred unchanged, but record whether adjustment was permitted.
     out["y_pred_ral"] = out["y_pred"]

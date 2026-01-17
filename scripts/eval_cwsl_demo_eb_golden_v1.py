@@ -54,7 +54,9 @@ def main() -> None:
     required = {"entity_id", "interval_start", "y_true", "y_pred"}
     missing = sorted(required - set(fcst.columns))
     if missing:
-        raise ValueError(f"panel_point_forecast_v1 missing required columns: {missing}. Got: {list(fcst.columns)}")
+        raise ValueError(
+            f"panel_point_forecast_v1 missing required columns: {missing}. Got: {list(fcst.columns)}"
+        )
 
     # Evaluate only where truth is known
     eval_df = fcst[fcst["y_true"].notna()].copy()

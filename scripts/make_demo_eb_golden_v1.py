@@ -16,8 +16,8 @@ Notes:
 
 from __future__ import annotations
 
-import json
 from datetime import UTC, date, datetime, timedelta
+import json
 from pathlib import Path
 
 import numpy as np
@@ -68,7 +68,9 @@ def main() -> None:
             for d in range(num_days):
                 business_day = start_day + timedelta(days=d)
                 for idx in range(intervals_per_day):
-                    ts = datetime.combine(business_day, datetime.min.time()) + timedelta(minutes=30 * idx)
+                    ts = datetime.combine(business_day, datetime.min.time()) + timedelta(
+                        minutes=30 * idx
+                    )
 
                     # Demo semantics (intentionally "imperfect"):
                     # - structural zeros represent "closed" periods
@@ -121,7 +123,7 @@ def main() -> None:
     print("DEMO DATASET OK")
     print(f"- base-dir: {base}")
     print(f"- rows:     {df.shape[0]}")
-    print(f"- outputs:")
+    print("- outputs:")
     print(f"  - {out_csv.relative_to(_repo_root())}")
     print(f"  - {manifest_path.relative_to(_repo_root())}")
 

@@ -30,10 +30,10 @@ Notes:
 from __future__ import annotations
 
 import argparse
-import subprocess
-import sys
 from dataclasses import dataclass
 from pathlib import Path
+import subprocess
+import sys
 
 
 def _repo_root() -> Path:
@@ -88,7 +88,9 @@ def _run_step(step: Step, *, repo_root: Path, scripts_dir: Path, base_dir: str |
 
     proc = subprocess.run(cmd, cwd=str(repo_root))
     if proc.returncode != 0:
-        raise SystemExit(f"\nFAILED: {step.name} (exit={proc.returncode})\nCommand: {' '.join(cmd)}")
+        raise SystemExit(
+            f"\nFAILED: {step.name} (exit={proc.returncode})\nCommand: {' '.join(cmd)}"
+        )
 
 
 def main() -> None:
@@ -134,7 +136,11 @@ def main() -> None:
     print("ALL STEPS OK ✅")
     print("=" * 88)
 
-    base = Path(args.base_dir) if (args.base_dir and args.base_dir.strip() != "") else Path("data/demo/eb_golden_v1")
+    base = (
+        Path(args.base_dir)
+        if (args.base_dir and args.base_dir.strip() != "")
+        else Path("data/demo/eb_golden_v1")
+    )
     if not base.is_absolute():
         base = repo_root / base
 

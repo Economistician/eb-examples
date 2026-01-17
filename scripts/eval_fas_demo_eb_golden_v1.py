@@ -39,8 +39,7 @@ def _parse_args() -> argparse.Namespace:
     p.add_argument(
         "--base-dir",
         default=None,
-        help="Artifact base directory (repo-relative or absolute). "
-        "Default: data/demo/eb_golden_v1",
+        help="Artifact base directory (repo-relative or absolute). Default: data/demo/eb_golden_v1",
     )
     return p.parse_args()
 
@@ -84,7 +83,9 @@ def main() -> None:
     fcst_required = {"entity_id", "interval_start", "y_true", "y_pred"}
     missing = sorted(fcst_required - set(fcst.columns))
     if missing:
-        raise ValueError(f"panel_point_forecast_v1 missing columns: {missing}. Got: {list(fcst.columns)}")
+        raise ValueError(
+            f"panel_point_forecast_v1 missing columns: {missing}. Got: {list(fcst.columns)}"
+        )
 
     # Join key from demand -> forecast:
     # baseline builder used: entity_id = f"{site_id}::{forecast_entity_id}"

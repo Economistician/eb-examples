@@ -45,7 +45,9 @@ def _parse_args() -> argparse.Namespace:
 def _parse_forecast_entity_id(entity_id: str) -> str:
     parts = str(entity_id).split("::", 1)
     if len(parts) != 2:
-        raise ValueError(f"Unexpected entity_id format: {entity_id!r} (expected 'site_id::forecast_entity_id')")
+        raise ValueError(
+            f"Unexpected entity_id format: {entity_id!r} (expected 'site_id::forecast_entity_id')"
+        )
     return parts[1]
 
 
@@ -59,7 +61,10 @@ def main() -> None:
     gov_path = artifacts.governance_v1
 
     for pth, hint in [
-        (base_fcst_path, f"Run: python scripts/baseline_forecast_demo_eb_golden_v1.py --base-dir {base_dir}"),
+        (
+            base_fcst_path,
+            f"Run: python scripts/baseline_forecast_demo_eb_golden_v1.py --base-dir {base_dir}",
+        ),
         (ral_fcst_path, f"Run: python scripts/ral_demo_eb_golden_v1.py --base-dir {base_dir}"),
         (gov_path, f"Run: python scripts/govern_demo_eb_golden_v1.py --base-dir {base_dir}"),
     ]:
@@ -104,7 +109,9 @@ def main() -> None:
     )
 
     merged["forecast_entity_id"] = merged["entity_id"].map(_parse_forecast_entity_id)
-    merged["allow_adjustment"] = merged["forecast_entity_id"].map(lambda x: bool(allow_map.get(str(x), False)))
+    merged["allow_adjustment"] = merged["forecast_entity_id"].map(
+        lambda x: bool(allow_map.get(str(x), False))
+    )
 
     # Serve RAL only when (a) allowed and (b) present
     use_ral = (merged["allow_adjustment"] == True) & merged["y_pred_ral"].notna()  # noqa: E712
@@ -128,7 +135,11 @@ def main() -> None:
         "ral_applied",
         "allow_adjustment",
     ]
-    out = merged[cols].sort_values(by=["entity_id", "interval_start"], kind="mergesort").reset_index(drop=True)
+    out = (
+        merged[cols]
+        .sort_values(by=["entity_id", "interval_start"], kind="mergesort")
+        .reset_index(drop=True)
+    )
 
     artifacts.serving_dir.mkdir(parents=True, exist_ok=True)
     out_path = artifacts.served_forecast_v1

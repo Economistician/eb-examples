@@ -29,8 +29,8 @@ Notes:
 from __future__ import annotations
 
 import argparse
-import json
 from dataclasses import asdict, dataclass
+import json
 from typing import Any
 
 import pandas as pd
@@ -177,7 +177,9 @@ def main() -> None:
     if "forecast_entity_id" not in fas.columns:
         key = _pick_col(fas, ["forecast_entity_id", "FORECAST_ENTITY_ID", "entity_id", "id"])
         if key is None:
-            raise ValueError(f"fas_v1.parquet missing a recognizable key column. Got: {list(fas.columns)}")
+            raise ValueError(
+                f"fas_v1.parquet missing a recognizable key column. Got: {list(fas.columns)}"
+            )
         fas = fas.rename(columns={key: "forecast_entity_id"})
 
     if "forecast_entity_id" not in dqc.columns:

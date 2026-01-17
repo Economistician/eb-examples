@@ -19,7 +19,6 @@ Notes:
 from __future__ import annotations
 
 import argparse
-from pathlib import Path
 
 import pandas as pd
 
@@ -32,8 +31,7 @@ def _parse_args() -> argparse.Namespace:
     p.add_argument(
         "--base-dir",
         default=None,
-        help="Artifact base directory (repo-relative or absolute). "
-        "Default: data/demo/eb_golden_v1",
+        help="Artifact base directory (repo-relative or absolute). Default: data/demo/eb_golden_v1",
     )
     return p.parse_args()
 

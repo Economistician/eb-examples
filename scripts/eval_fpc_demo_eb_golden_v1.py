@@ -41,8 +41,7 @@ def _parse_args() -> argparse.Namespace:
     p.add_argument(
         "--base-dir",
         default=None,
-        help="Artifact base directory (repo-relative or absolute). "
-        "Default: data/demo/eb_golden_v1",
+        help="Artifact base directory (repo-relative or absolute). Default: data/demo/eb_golden_v1",
     )
     p.add_argument(
         "--tau",
@@ -63,7 +62,9 @@ def _parse_forecast_entity_id(entity_id: str) -> str:
     # baseline script used: f"{site_id}::{forecast_entity_id}"
     parts = str(entity_id).split("::", 1)
     if len(parts) != 2:
-        raise ValueError(f"Unexpected entity_id format: {entity_id!r} (expected 'site_id::forecast_entity_id')")
+        raise ValueError(
+            f"Unexpected entity_id format: {entity_id!r} (expected 'site_id::forecast_entity_id')"
+        )
     return parts[1]
 
 
@@ -91,7 +92,9 @@ def main() -> None:
     required = {"entity_id", "interval_start", "y_true", "y_pred"}
     missing = sorted(required - set(fcst.columns))
     if missing:
-        raise ValueError(f"panel_point_forecast_v1 missing required columns: {missing}. Got: {list(fcst.columns)}")
+        raise ValueError(
+            f"panel_point_forecast_v1 missing required columns: {missing}. Got: {list(fcst.columns)}"
+        )
 
     # Realized rows only (where truth exists)
     df = fcst[fcst["y_true"].notna()].copy()

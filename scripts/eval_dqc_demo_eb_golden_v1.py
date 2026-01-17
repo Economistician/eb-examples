@@ -32,8 +32,7 @@ def _parse_args() -> argparse.Namespace:
     p.add_argument(
         "--base-dir",
         default=None,
-        help="Artifact base directory (repo-relative or absolute). "
-        "Default: data/demo/eb_golden_v1",
+        help="Artifact base directory (repo-relative or absolute). Default: data/demo/eb_golden_v1",
     )
     return p.parse_args()
 
@@ -55,7 +54,9 @@ def main() -> None:
     required = {"forecast_entity_id", "y", "is_observable"}
     missing = sorted(required - set(demand.columns))
     if missing:
-        raise ValueError(f"panel_demand_v1 missing required columns: {missing}. Got: {list(demand.columns)}")
+        raise ValueError(
+            f"panel_demand_v1 missing required columns: {missing}. Got: {list(demand.columns)}"
+        )
 
     # Realized / learnable demand only
     df = demand[(demand["is_observable"] == True) & (demand["y"].notna())].copy()  # noqa: E712

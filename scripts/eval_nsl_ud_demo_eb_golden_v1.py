@@ -27,12 +27,13 @@ from eb_metrics.metrics.service import nsl, ud
 
 
 def _parse_args() -> argparse.Namespace:
-    p = argparse.ArgumentParser(description="Evaluate NSL/UD for eb_golden_v1 demo baseline forecast")
+    p = argparse.ArgumentParser(
+        description="Evaluate NSL/UD for eb_golden_v1 demo baseline forecast"
+    )
     p.add_argument(
         "--base-dir",
         default=None,
-        help="Artifact base directory (repo-relative or absolute). "
-        "Default: data/demo/eb_golden_v1",
+        help="Artifact base directory (repo-relative or absolute). Default: data/demo/eb_golden_v1",
     )
     return p.parse_args()
 
