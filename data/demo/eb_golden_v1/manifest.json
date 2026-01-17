@@ -1,0 +1,65 @@
+{
+  "dataset_id": "eb_golden_v1",
+  "version": "v1",
+  "generator": "scripts/make_demo_eb_golden_v1.py",
+  "seed": 7,
+  "shape": {
+    "rows": 2688,
+    "cols": 13
+  },
+  "dimensions": {
+    "stores": [
+      "0001",
+      "0002"
+    ],
+    "entities": [
+      {
+        "id": "100",
+        "name": "BEEF_PATTY"
+      },
+      {
+        "id": "200",
+        "name": "CHICKEN_STRIPS"
+      }
+    ],
+    "interval_minutes": 30,
+    "intervals_per_day": 48
+  },
+  "time_window": {
+    "start_business_day": "2026-01-01",
+    "history_days": 7,
+    "future_days": 7
+  },
+  "structural_zero_policy": {
+    "open_start_interval": 12,
+    "open_end_interval": 46,
+    "closed_is_structural_zero": true
+  },
+  "observability_policy": {
+    "history_day_observable": true,
+    "future_day_observable": false,
+    "future_interval_observable": false,
+    "p_missing_past_interval_observable": 0.01
+  },
+  "columns": [
+    "STORE_ID",
+    "FORECAST_ENTITY_ID",
+    "FORECAST_ENTITY_NAME",
+    "BUSINESS_DAY",
+    "INTERVAL_30_INDEX",
+    "INTERVAL_START_TS",
+    "DEMAND_QTY",
+    "IS_DAY_OBSERVABLE",
+    "IS_INTERVAL_OBSERVABLE",
+    "IS_STRUCTURAL_ZERO",
+    "HAS_DEMAND",
+    "IS_FUTURE",
+    "IS_VALUE_KNOWN"
+  ],
+  "notes": [
+    "Structural zeros use DEMAND_QTY=0 and IS_STRUCTURAL_ZERO=True.",
+    "Future scaffold uses DEMAND_QTY missing and IS_INTERVAL_OBSERVABLE=False.",
+    "Rare missing observability in history hides DEMAND_QTY (sets to missing).",
+    "Entity names are generic; no brand-specific menu items are used."
+  ]
+}
