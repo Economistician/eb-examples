@@ -1,0 +1,113 @@
+######################################
+# Project metadata
+######################################
+[project]
+name = "eb-examples"
+version = "0.2.0"
+description = "Electric Barometer: runnable examples, demo datasets, and end-to-end golden-path pipelines."
+readme = "README.md"
+requires-python = ">=3.10"
+license = "BSD-3-Clause"
+license-files = ["LICENSE*"]
+
+authors = [
+  { name = "Kyle Corrie (Economistician)", email = "kcorrie@economistician.com" }
+]
+
+keywords = [
+  "electric-barometer",
+  "forecasting",
+  "examples",
+  "demo-dataset",
+  "pipelines",
+  "readiness",
+  "governance",
+  "pandas",
+]
+
+classifiers = [
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3 :: Only",
+  "Programming Language :: Python :: 3.10",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  "Programming Language :: Python :: 3.13",
+  "Operating System :: OS Independent",
+]
+
+######################################
+# Core runtime dependencies
+######################################
+dependencies = [
+  "numpy>=1.24",
+  "pandas>=2.0",
+
+  # Needed for .to_parquet() artifacts in the golden path.
+  # Keep broad; users can choose their backend, but pyarrow is the clean default.
+  "pyarrow>=14.0",
+
+  # Electric Barometer compatibility band (0.2.x)
+  "eb-contracts>=0.2,<0.3",
+  "eb-metrics>=0.2,<0.3",
+  "eb-evaluation>=0.2,<0.3",
+  "eb-adapters>=0.2,<0.3",
+]
+
+######################################
+# Project URLs
+######################################
+[project.urls]
+Homepage = "https://github.com/Economistician/eb-examples"
+Repository = "https://github.com/Economistician/eb-examples"
+Issues = "https://github.com/Economistician/eb-examples/issues"
+Documentation = "https://github.com/Economistician/eb-docs"
+
+######################################
+# Console scripts
+######################################
+[project.scripts]
+eb-demo = "eb_examples.cli:main"
+
+######################################
+# Optional dependencies (extras)
+######################################
+[project.optional-dependencies]
+
+# CI / test-only dependencies
+test = [
+  "pytest>=8.0",
+]
+
+# Local developer tooling
+dev = [
+  "pytest>=8.0",
+  "pytest-cov>=5.0",
+  "ruff>=0.6",
+]
+
+# Convenience aggregate
+all = [
+  "pytest>=8.0",
+  "pytest-cov>=5.0",
+  "ruff>=0.6",
+]
+
+######################################
+# Build system
+######################################
+[build-system]
+requires = ["setuptools>=64", "wheel"]
+build-backend = "setuptools.build_meta"
+
+######################################
+# Package discovery
+######################################
+[tool.setuptools.packages.find]
+where = ["src"]
+
+######################################
+# Pytest configuration
+######################################
+[tool.pytest.ini_options]
+pythonpath = ["src"]
+addopts = "-ra"
