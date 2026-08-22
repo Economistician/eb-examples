@@ -91,6 +91,7 @@ def _print_outputs(repo_root: Path, *, base_dir: Path) -> None:
         base_dir / "diagnostics" / "cwsl_v1.parquet",
         base_dir / "diagnostics" / "hr_tau_v1.parquet",
         base_dir / "diagnostics" / "nsl_ud_v1.parquet",
+        base_dir / "diagnostics" / "frs_v1.parquet",
         base_dir / "diagnostics" / "fas_v1.parquet",
         base_dir / "diagnostics" / "dqc_v1.parquet",
         base_dir / "diagnostics" / "fpc_v1.parquet",
@@ -116,8 +117,9 @@ def _demo_golden_v1_steps(*, include_fas: bool) -> list[Step]:
         Step("Contractify demand -> PanelDemandV1", "contractify_demo_eb_golden_v1.py"),
         Step("Baseline point forecast", "baseline_forecast_demo_eb_golden_v1.py"),
         Step("Evaluate CWSL", "eval_cwsl_demo_eb_golden_v1.py"),
-        Step("Evaluate HR@τ", "eval_hr_tau_demo_eb_golden_v1.py"),
+        Step("Evaluate HR@tau", "eval_hr_tau_demo_eb_golden_v1.py"),
         Step("Evaluate NSL/UD", "eval_nsl_ud_demo_eb_golden_v1.py"),
+        Step("Evaluate FRS", "eval_frs_demo_eb_golden_v1.py"),
     ]
     if include_fas:
         steps.append(Step("Evaluate FAS", "eval_fas_demo_eb_golden_v1.py"))
@@ -160,7 +162,7 @@ def _cmd_demo(args: argparse.Namespace) -> int:
         _run_step(step, repo_root=repo_root, base_dir=base_dir)
 
     print("\n" + "=" * 88)
-    print("ALL STEPS OK ✅")
+    print("ALL STEPS OK")
     print("=" * 88)
 
     _print_outputs(repo_root, base_dir=base_dir)

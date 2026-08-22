@@ -7,7 +7,7 @@ Runs (in canonical order):
 1) Generate demo raw data
 2) Contractify to PanelDemandV1
 3) Baseline point forecast
-4) Metrics: CWSL, HR@τ, NSL/UD
+4) Metrics: CWSL, HR@τ, NSL/UD, FRS (requires cwsl_max)
 5) FAS (optional)
 6) DQC
 7) FPC (identity RAL signals)
@@ -103,8 +103,9 @@ def main() -> None:
         Step("Contractify demand -> PanelDemandV1", "contractify_demo_eb_golden_v1.py"),
         Step("Baseline point forecast", "baseline_forecast_demo_eb_golden_v1.py"),
         Step("Evaluate CWSL", "eval_cwsl_demo_eb_golden_v1.py"),
-        Step("Evaluate HR@τ", "eval_hr_tau_demo_eb_golden_v1.py"),
+        Step("Evaluate HR@tau", "eval_hr_tau_demo_eb_golden_v1.py"),
         Step("Evaluate NSL/UD", "eval_nsl_ud_demo_eb_golden_v1.py"),
+        Step("Evaluate FRS", "eval_frs_demo_eb_golden_v1.py"),
     ]
     if not args.no_fas:
         steps.append(Step("Evaluate FAS", "eval_fas_demo_eb_golden_v1.py"))
@@ -133,7 +134,7 @@ def main() -> None:
         _run_step(step, repo_root=repo_root, scripts_dir=scripts_dir, base_dir=args.base_dir)
 
     print("\n" + "=" * 88)
-    print("ALL STEPS OK ✅")
+    print("ALL STEPS OK")
     print("=" * 88)
 
     base = (
@@ -152,6 +153,7 @@ def main() -> None:
         base / "diagnostics" / "cwsl_v1.parquet",
         base / "diagnostics" / "hr_tau_v1.parquet",
         base / "diagnostics" / "nsl_ud_v1.parquet",
+        base / "diagnostics" / "frs_v1.parquet",
         base / "diagnostics" / "fas_v1.parquet",
         base / "diagnostics" / "dqc_v1.parquet",
         base / "diagnostics" / "fpc_v1.parquet",

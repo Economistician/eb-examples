@@ -92,6 +92,10 @@ class GoldenV1Artifacts:
         return self.diagnostics_dir / "nsl_ud_v1.parquet"
 
     @property
+    def frs_v1(self) -> Path:
+        return self.diagnostics_dir / "frs_v1.parquet"
+
+    @property
     def fas_v1(self) -> Path:
         return self.diagnostics_dir / "fas_v1.parquet"
 

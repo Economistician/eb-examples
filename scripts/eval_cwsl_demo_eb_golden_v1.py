@@ -8,7 +8,7 @@ Writes:
 - <base-dir>/diagnostics/cwsl_v1.parquet
 
 Uses:
-- eb_metrics.metrics.loss.cwsl(y_true, y_pred, cu, co, sample_weight=None)
+- eb_metrics.cwsl(y_true, y_pred, cu, co, sample_weight=None)
 
 Notes:
 - Diagnostics only (no gating, no adjustment).
@@ -22,7 +22,7 @@ import argparse
 import pandas as pd
 
 from eb_examples.paths import GoldenV1Artifacts, resolve_base_dir
-from eb_metrics.metrics.loss import cwsl
+from eb_metrics import cwsl
 
 
 def _build_parser() -> argparse.ArgumentParser:

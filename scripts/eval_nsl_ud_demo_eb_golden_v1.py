@@ -8,8 +8,8 @@ Writes:
 - <base-dir>/diagnostics/nsl_ud_v1.parquet
 
 Uses:
-- eb_metrics.metrics.service.nsl
-- eb_metrics.metrics.service.ud
+- eb_metrics.nsl
+- eb_metrics.ud
 
 Notes:
 - Diagnostics only (no gating, no adjustment).
@@ -23,7 +23,7 @@ import argparse
 import pandas as pd
 
 from eb_examples.paths import GoldenV1Artifacts, resolve_base_dir
-from eb_metrics.metrics.service import nsl, ud
+from eb_metrics import nsl, ud
 
 
 def _parse_args() -> argparse.Namespace:
