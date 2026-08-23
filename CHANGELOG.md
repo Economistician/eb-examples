@@ -7,27 +7,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-### Added
-
-- `__version__` on the package root.
+## [0.2.0] - 2026-08-23
 
 ### Changed
 
 - Golden-path scripts import exclusively from public package roots.
 - Rephrased demo script headers to imperative voice.
 - Changelog version header now matches `pyproject.toml` (`0.2.0`).
+- Pinned sibling Electric Barometer packages to exact System Release 0.2.9 versions.
 
 ### Fixed
 
 - Resolved Pyright import resolution for the CLI entrypoint and smoke tests.
-
-## [0.2.0] - 2026-08-22
-
-### Fixed
-
 - Aligned golden path pipeline script to include explicit FRS evaluation with required `cwsl_max`.
 - Updated all metric scripts to import exclusively from public package roots.
 
 ### Added
 
+- `__version__` on the package root.
 - Added `py.typed` marker and `pyarrow` dependency for parquet handling.

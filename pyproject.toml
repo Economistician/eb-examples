@@ -46,11 +46,11 @@ dependencies = [
   # Keep broad; users can choose their backend, but pyarrow is the clean default.
   "pyarrow>=14.0",
 
-  # Electric Barometer compatibility band (0.2.x)
-  "eb-contracts>=0.2,<0.3",
-  "eb-metrics>=0.2,<0.3",
-  "eb-evaluation>=0.2,<0.3",
-  "eb-adapters>=0.2,<0.3",
+  # Electric Barometer System Release 0.2.9 pins
+  "eb-contracts==0.2.2",
+  "eb-metrics==0.2.8",
+  "eb-evaluation==0.2.8",
+  "eb-adapters==0.2.4",
 ]
 
 ######################################
