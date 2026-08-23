@@ -28,10 +28,7 @@ from eb_examples.paths import GoldenV1Artifacts, resolve_base_dir
 
 
 def _make_entity_id(site_id: object, forecast_entity_id: object) -> str:
-    """
-    Forecast contracts use a single opaque `entity_id`.
-    We compose it deterministically from the demand identity keys.
-    """
+    """Build opaque ``entity_id`` as ``{site_id}::{forecast_entity_id}``."""
     return f"{site_id}::{forecast_entity_id}"
 
 

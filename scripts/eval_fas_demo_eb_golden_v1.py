@@ -15,8 +15,8 @@ Uses:
 
 Notes:
 - FAS is informative-only (no gating, no adjustment).
-- We compute anatomy only on rows where truth is known (y not NA) and baseline is present.
-- For this demo, we classify at mode="entity" to ensure sufficient support per slice.
+- Anatomy uses rows with known truth (y not NA) and a present baseline.
+- Demo classifies at mode="entity" for sufficient support per slice.
 """
 
 from __future__ import annotations
