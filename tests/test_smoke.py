@@ -5,7 +5,9 @@ import importlib
 
 def test_import_eb_examples() -> None:
     # Ensures the package is importable in editable installs and CI.
-    importlib.import_module("eb_examples")
+    pkg = importlib.import_module("eb_examples")
+    version = pkg.__version__
+    assert isinstance(version, str) and version
 
 
 def test_cli_help_runs() -> None:
