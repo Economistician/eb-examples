@@ -11,10 +11,11 @@ Writes:
 Uses:
 - eb_evaluation.slice_keys
 - eb_evaluation.compute_error_anatomy
-- eb_evaluation.build_fas_surface
+- electric_barometer.build_fas_surface
 
 Notes:
-- FAS is informative-only (no gating, no adjustment).
+- FAS review is mandatory for governance. Downstream
+  ``run_governance_workflow_df`` / ``apply_ral`` fail closed if FAS is omitted.
 - Anatomy uses rows with known truth (y not NA) and a present baseline.
 - Demo classifies at mode="entity" for sufficient support per slice.
 """
@@ -27,11 +28,11 @@ import pandas as pd
 
 from eb_evaluation import (
     FASThresholds,
-    build_fas_surface,
     compute_error_anatomy,
     slice_keys,
 )
 from eb_examples import GoldenV1Artifacts, resolve_base_dir
+from electric_barometer import build_fas_surface
 
 
 def _parse_args() -> argparse.Namespace:

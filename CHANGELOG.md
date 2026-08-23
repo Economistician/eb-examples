@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+
+- Golden-path governance and RAL scripts call `electric_barometer.run_governance_workflow_df` and `electric_barometer.apply_ral`.
+- FAS review is mandatory; `--no-fas` is removed.
+- Runtime pin includes `electric-barometer==0.2.9`.
+
 ## [0.2.0] - 2026-08-23
 
 ### Changed

@@ -51,6 +51,7 @@ dependencies = [
   "eb-metrics==0.2.8",
   "eb-evaluation==0.2.9",
   "eb-adapters==0.2.4",
+  "electric-barometer==0.2.9",
 ]
 
 ######################################

@@ -8,17 +8,16 @@ Runs (in canonical order):
 2) Contractify to PanelDemandV1
 3) Baseline point forecast
 4) Metrics: CWSL, HR@τ, NSL/UD, FRS (requires cwsl_max)
-5) FAS (optional)
+5) FAS (mandatory)
 6) DQC
-7) FPC (identity RAL signals)
-8) Governance
-9) RAL (identity/no-op under permission)
+7) FPC
+8) Governance via electric_barometer.run_governance_workflow_df
+9) RAL via electric_barometer.apply_ral
 10) Serving artifact
 
 Usage:
   python scripts/run_demo_eb_golden_v1.py
   python scripts/run_demo_eb_golden_v1.py --base-dir data/demo/eb_golden_v1_run2
-  python scripts/run_demo_eb_golden_v1.py --base-dir data/demo/eb_golden_v1_run3 --no-fas
   python scripts/run_demo_eb_golden_v1.py --steps
 
 Notes:
@@ -63,7 +62,6 @@ def _parse_args() -> argparse.Namespace:
         default=None,
         help="Artifact base directory (repo-relative or absolute). Default: data/demo/eb_golden_v1",
     )
-    p.add_argument("--no-fas", action="store_true", help="Skip optional FAS step")
     p.add_argument("--steps", action="store_true", help="Print the ordered steps and exit")
     return p.parse_args()
 
@@ -106,18 +104,13 @@ def main() -> None:
         Step("Evaluate HR@tau", "eval_hr_tau_demo_eb_golden_v1.py"),
         Step("Evaluate NSL/UD", "eval_nsl_ud_demo_eb_golden_v1.py"),
         Step("Evaluate FRS", "eval_frs_demo_eb_golden_v1.py"),
+        Step("Evaluate FAS (mandatory)", "eval_fas_demo_eb_golden_v1.py"),
+        Step("Evaluate DQC", "eval_dqc_demo_eb_golden_v1.py"),
+        Step("Evaluate FPC", "eval_fpc_demo_eb_golden_v1.py"),
+        Step("Governance workflow (electric_barometer)", "govern_demo_eb_golden_v1.py"),
+        Step("RAL via apply_ral", "ral_demo_eb_golden_v1.py"),
+        Step("Serving / execution artifact", "serve_demo_eb_golden_v1.py"),
     ]
-    if not args.no_fas:
-        steps.append(Step("Evaluate FAS", "eval_fas_demo_eb_golden_v1.py"))
-    steps.extend(
-        [
-            Step("Evaluate DQC", "eval_dqc_demo_eb_golden_v1.py"),
-            Step("Evaluate FPC", "eval_fpc_demo_eb_golden_v1.py"),
-            Step("Governance composition", "govern_demo_eb_golden_v1.py"),
-            Step("RAL (identity under permission)", "ral_demo_eb_golden_v1.py"),
-            Step("Serving / execution artifact", "serve_demo_eb_golden_v1.py"),
-        ]
-    )
 
     if args.steps:
         for i, s in enumerate(steps, start=1):
@@ -128,7 +121,7 @@ def main() -> None:
     print(f"- repo:     {repo_root}")
     print(f"- steps:    {len(steps)}")
     print(f"- base-dir: {args.base_dir or 'data/demo/eb_golden_v1'}")
-    print(f"- fas:      {'disabled' if args.no_fas else 'enabled'}")
+    print("- fas:      mandatory")
 
     for step in steps:
         _run_step(step, repo_root=repo_root, scripts_dir=scripts_dir, base_dir=args.base_dir)

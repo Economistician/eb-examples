@@ -1,5 +1,5 @@
 """
-Apply RAL (Readiness Adjustment Layer) for eb_golden_v1, strictly under Governance permission.
+Apply RAL for eb_golden_v1 through ``electric_barometer.apply_ral``.
 
 Reads:
 - <base-dir>/panel_point_forecast_v1.parquet
@@ -8,14 +8,6 @@ Reads:
 Writes:
 - <base-dir>/ral/panel_point_forecast_v1_ral.parquet
 - <base-dir>/ral/ral_trace_v1.parquet
-
-RAL mode (demo):
-- identity (no-op): y_pred_ral == y_pred
-- Applied only when governance.allow_adjustment is True for the forecast_entity_id.
-
-Notes:
-- This produces an adjusted forecast artifact + traceability.
-- No fallback is performed here.
 """
 
 from __future__ import annotations
@@ -25,11 +17,12 @@ import argparse
 import pandas as pd
 
 from eb_examples import GoldenV1Artifacts, resolve_base_dir
+from electric_barometer import apply_ral
 
 
 def _parse_args() -> argparse.Namespace:
     p = argparse.ArgumentParser(
-        description="Apply RAL under governance permissions (eb_golden_v1 demo)"
+        description="Apply official RAL under governance decisions (eb_golden_v1 demo)"
     )
     p.add_argument(
         "--base-dir",
@@ -55,55 +48,59 @@ def main() -> None:
 
     fcst_path = artifacts.panel_point_forecast_v1
     gov_path = artifacts.governance_v1
-
     if not fcst_path.exists():
         raise FileNotFoundError(
-            f"Missing forecast panel at {fcst_path}. Run: python scripts/baseline_forecast_demo_eb_golden_v1.py --base-dir {base_dir}"
+            f"Missing forecast panel at {fcst_path}. "
+            f"Run: python scripts/baseline_forecast_demo_eb_golden_v1.py --base-dir {base_dir}"
         )
     if not gov_path.exists():
         raise FileNotFoundError(
-            f"Missing governance artifact at {gov_path}. Run: python scripts/govern_demo_eb_golden_v1.py --base-dir {base_dir}"
+            f"Missing governance artifact at {gov_path}. "
+            f"Run: python scripts/govern_demo_eb_golden_v1.py --base-dir {base_dir}"
         )
 
     fcst = pd.read_parquet(fcst_path)
     gov = pd.read_parquet(gov_path)
-
     required_fcst = {"entity_id", "interval_start", "y_pred"}
     missing = sorted(required_fcst - set(fcst.columns))
     if missing:
         raise ValueError(
             f"panel_point_forecast_v1 missing required columns: {missing}. Got: {list(fcst.columns)}"
         )
-
-    required_gov = {"forecast_entity_id", "allow_adjustment"}
+    required_gov = {
+        "forecast_entity_id",
+        "ral_policy",
+        "status",
+        "fas_class",
+        "dqc_class",
+        "snap_required",
+    }
     missing = sorted(required_gov - set(gov.columns))
     if missing:
         raise ValueError(
-            f"governance_v1 missing required columns: {missing}. Got: {list(gov.columns)}"
+            f"governance_v1 missing required official columns: {missing}. Got: {list(gov.columns)}"
         )
 
-    # Determine permission per forecast_entity_id
-    gov_map: dict[str, bool] = (
-        gov.assign(forecast_entity_id=gov["forecast_entity_id"].astype(str))
-        .set_index("forecast_entity_id")["allow_adjustment"]
-        .map(bool)
-        .to_dict()
+    work = fcst.copy()
+    work["forecast_entity_id"] = work["entity_id"].map(_parse_forecast_entity_id)
+    work["yhat_base"] = work["y_pred"]
+    work["yhat_ral"] = work["y_pred"]
+    applied = apply_ral(
+        df=work,
+        decisions=gov,
+        key_cols=["forecast_entity_id"],
+        yhat_base_col="yhat_base",
+        yhat_ral_col="yhat_ral",
+        snap_mode="ceil",
     )
+    out = applied.copy()
+    out["y_pred_ral"] = out["yhat_ral_governed"]
+    applied_col = "ral_apply_ral_applied" if "ral_apply_ral_applied" in out.columns else None
+    if applied_col is None:
+        raise ValueError("apply_ral did not emit ral_apply_ral_applied audit column.")
+    out["ral_applied"] = out[applied_col].astype(bool)
+    out["ral_mode"] = out["ral_applied"].map(lambda ok: "governed" if bool(ok) else "none")
 
-    out = fcst.copy()
-    out["forecast_entity_id"] = out["entity_id"].map(_parse_forecast_entity_id)
-
-    # Permission lookup (missing => False)
-    out["allow_adjustment"] = out["forecast_entity_id"].map(
-        lambda x: bool(gov_map.get(str(x), False))
-    )
-
-    # Identity RAL (no-op). In demo: we keep y_pred unchanged, but record whether adjustment was permitted.
-    out["y_pred_ral"] = out["y_pred"]
-    out["ral_applied"] = out["allow_adjustment"]
-    out["ral_mode"] = out["allow_adjustment"].map(lambda ok: "identity" if ok else "none")
-
-    # Trace: one row per entity_id indicating whether RAL applied (and why)
     trace_cols = ["entity_id", "forecast_entity_id", "ral_applied", "ral_mode"]
     trace = (
         out[trace_cols]
@@ -113,17 +110,14 @@ def main() -> None:
     )
 
     artifacts.ral_dir.mkdir(parents=True, exist_ok=True)
-    out_path = artifacts.panel_point_forecast_v1_ral
-    trace_path = artifacts.ral_trace_v1
-
-    out.to_parquet(out_path, index=False)
-    trace.to_parquet(trace_path, index=False)
+    out.to_parquet(artifacts.panel_point_forecast_v1_ral, index=False)
+    trace.to_parquet(artifacts.ral_trace_v1, index=False)
 
     print("RAL OK")
     print(f"- input forecast: {fcst_path}")
     print(f"- input gov:      {gov_path}")
-    print(f"- output:         {out_path}")
-    print(f"- trace:          {trace_path}")
+    print(f"- output:         {artifacts.panel_point_forecast_v1_ral}")
+    print(f"- trace:          {artifacts.ral_trace_v1}")
     print(f"- adjusted rows:  {int(out['ral_applied'].sum())} / {out.shape[0]}")
     print(f"- base-dir:       {artifacts.base}")
 

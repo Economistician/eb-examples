@@ -5,7 +5,6 @@ Goal: a user-friendly entrypoint to run demo pipelines without hunting for scrip
 
 Examples:
   python -m eb_examples demo golden-v1
-  python -m eb_examples demo golden-v1 --no-fas
   python -m eb_examples demo golden-v1 --steps
   python -m eb_examples demo golden-v1 --base-dir data/demo/eb_golden_v1_run5
 
@@ -111,8 +110,8 @@ def _print_outputs(repo_root: Path, *, base_dir: Path) -> None:
         print(f"- {status:7} {rel}")
 
 
-def _demo_golden_v1_steps(*, include_fas: bool) -> list[Step]:
-    steps: list[Step] = [
+def _demo_golden_v1_steps() -> list[Step]:
+    return [
         Step("Generate demo dataset", "make_demo_eb_golden_v1.py"),
         Step("Contractify demand -> PanelDemandV1", "contractify_demo_eb_golden_v1.py"),
         Step("Baseline point forecast", "baseline_forecast_demo_eb_golden_v1.py"),
@@ -120,19 +119,13 @@ def _demo_golden_v1_steps(*, include_fas: bool) -> list[Step]:
         Step("Evaluate HR@tau", "eval_hr_tau_demo_eb_golden_v1.py"),
         Step("Evaluate NSL/UD", "eval_nsl_ud_demo_eb_golden_v1.py"),
         Step("Evaluate FRS", "eval_frs_demo_eb_golden_v1.py"),
+        Step("Evaluate FAS (mandatory)", "eval_fas_demo_eb_golden_v1.py"),
+        Step("Evaluate DQC", "eval_dqc_demo_eb_golden_v1.py"),
+        Step("Evaluate FPC", "eval_fpc_demo_eb_golden_v1.py"),
+        Step("Governance workflow (electric_barometer)", "govern_demo_eb_golden_v1.py"),
+        Step("RAL via apply_ral", "ral_demo_eb_golden_v1.py"),
+        Step("Serving / execution artifact", "serve_demo_eb_golden_v1.py"),
     ]
-    if include_fas:
-        steps.append(Step("Evaluate FAS", "eval_fas_demo_eb_golden_v1.py"))
-    steps.extend(
-        [
-            Step("Evaluate DQC", "eval_dqc_demo_eb_golden_v1.py"),
-            Step("Evaluate FPC", "eval_fpc_demo_eb_golden_v1.py"),
-            Step("Governance composition", "govern_demo_eb_golden_v1.py"),
-            Step("RAL (identity under permission)", "ral_demo_eb_golden_v1.py"),
-            Step("Serving / execution artifact", "serve_demo_eb_golden_v1.py"),
-        ]
-    )
-    return steps
 
 
 def _cmd_demo(args: argparse.Namespace) -> int:
@@ -142,7 +135,7 @@ def _cmd_demo(args: argparse.Namespace) -> int:
         raise SystemExit(f"Unknown demo: {args.demo_name!r}. Supported: golden-v1")
 
     base_dir = _resolve_base_dir(getattr(args, "base_dir", None), repo_root=repo_root)
-    steps = _demo_golden_v1_steps(include_fas=not args.no_fas)
+    steps = _demo_golden_v1_steps()
 
     if args.steps:
         for i, s in enumerate(steps, start=1):
@@ -156,7 +149,7 @@ def _cmd_demo(args: argparse.Namespace) -> int:
     print(
         f"- base-dir: {base_dir.relative_to(repo_root) if str(base_dir).startswith(str(repo_root)) else base_dir}"
     )
-    print(f"- fas:      {'enabled' if (not args.no_fas) else 'disabled'}")
+    print("- fas:      mandatory")
 
     for step in steps:
         _run_step(step, repo_root=repo_root, base_dir=base_dir)
@@ -178,7 +171,6 @@ def build_parser() -> argparse.ArgumentParser:
     demo.add_argument(
         "--base-dir", default=None, help="Output base directory (absolute or repo-relative)"
     )
-    demo.add_argument("--no-fas", action="store_true", help="Skip optional FAS step")
     demo.add_argument("--steps", action="store_true", help="Print the ordered steps and exit")
     demo.set_defaults(func=_cmd_demo)
 

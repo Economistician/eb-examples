@@ -90,11 +90,11 @@ grouped = evaluate_groups_df(
 )
 ```
 
-Scripts: `eval_cwsl_demo_eb_golden_v1.py`, `eval_hr_tau_demo_eb_golden_v1.py`, `eval_nsl_ud_demo_eb_golden_v1.py`, `eval_frs_demo_eb_golden_v1.py`, plus optional FAS.
+Scripts: `eval_cwsl_demo_eb_golden_v1.py`, `eval_hr_tau_demo_eb_golden_v1.py`, `eval_nsl_ud_demo_eb_golden_v1.py`, `eval_frs_demo_eb_golden_v1.py`, and mandatory FAS (`eval_fas_demo_eb_golden_v1.py`).
 
 ### 5. Governance gating
 
-`govern_demo_eb_golden_v1.py` composes DQC, FPC, HR@τ, and related diagnostics into a binding permission artifact. RAL and serving run only after that decision file is written. This demo permits identity (no-op) RAL when structural checks pass.
+`govern_demo_eb_golden_v1.py` calls `electric_barometer.run_governance_workflow_df`. FAS review is mandatory. `ral_demo_eb_golden_v1.py` then calls `electric_barometer.apply_ral` with the resulting decisions table.
 
 Scripts: `eval_fpc_demo_eb_golden_v1.py`, `govern_demo_eb_golden_v1.py`, `ral_demo_eb_golden_v1.py`, `serve_demo_eb_golden_v1.py`.
 
@@ -108,7 +108,7 @@ From the `eb-examples` repository root:
 python scripts/run_demo_eb_golden_v1.py
 python scripts/run_demo_eb_golden_v1.py --base-dir data/demo/eb_golden_v1_run2
 python -m eb_examples demo golden-v1 --steps
-eb-demo golden-v1 --no-fas
+eb-demo golden-v1
 ```
 
 Canonical runner order:
@@ -117,10 +117,10 @@ Canonical runner order:
 2. Contractify to `PanelDemandV1`
 3. Baseline point forecast
 4. Evaluate CWSL, HR@τ, NSL/UD, then FRS (`cwsl_max` required)
-5. Optional FAS
+5. Mandatory FAS
 6. DQC and FPC diagnostics
-7. Governance composition
-8. Identity RAL (when permitted)
+7. Governance via `electric_barometer.run_governance_workflow_df`
+8. RAL via `electric_barometer.apply_ral`
 9. Serving artifact
 
 Key outputs land under `--base-dir` (default `data/demo/eb_golden_v1`), including `diagnostics/frs_v1.parquet` and `governance/governance_v1.parquet`.
