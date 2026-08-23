@@ -49,7 +49,7 @@ dependencies = [
   # Electric Barometer System Release 0.2.9 pins
   "eb-contracts==0.2.2",
   "eb-metrics==0.2.8",
-  "eb-evaluation==0.2.8",
+  "eb-evaluation==0.2.9",
   "eb-adapters==0.2.4",
 ]
 
