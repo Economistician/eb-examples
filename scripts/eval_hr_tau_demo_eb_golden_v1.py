@@ -27,7 +27,9 @@ from eb_metrics import hr_at_tau
 
 
 def _parse_args() -> argparse.Namespace:
-    p = argparse.ArgumentParser(description="Evaluate HR@tau for eb_golden_v1 demo baseline forecast")
+    p = argparse.ArgumentParser(
+        description="Evaluate HR@tau for eb_golden_v1 demo baseline forecast"
+    )
     p.add_argument(
         "--base-dir",
         default=None,

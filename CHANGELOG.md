@@ -11,6 +11,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Rephrased demo script headers to imperative voice.
 
+### Fixed
+
+- Resolved Pyright import resolution for the CLI entrypoint and smoke tests.
+
 ## [0.2.x] - 2026-08-22
 
 ### Fixed

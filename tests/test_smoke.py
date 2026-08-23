@@ -10,7 +10,7 @@ def test_import_eb_examples() -> None:
 
 def test_cli_help_runs() -> None:
     # argparse prints help and exits with SystemExit(0); treat that as success.
-    from eb_examples.cli import main
+    from eb_examples.cli import main  # type: ignore[reportMissingImports]
 
     try:
         rc = main(["--help"])
