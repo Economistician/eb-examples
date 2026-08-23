@@ -211,6 +211,7 @@ __marimo__/
 # ------------------------------------------------------------------
 data/demo/eb_golden_v1/
 data/demo/eb_golden_v1_run*/
+data/demo/eb_golden_v1_pass3/
 
 # ------------------------------------------------------------------
 # Cross-repo development tooling (symlinked from eb-integration)
