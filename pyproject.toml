@@ -6,7 +6,7 @@ name = "eb-examples"
 version = "0.2.0"
 description = "Electric Barometer: runnable examples, demo datasets, and end-to-end golden-path pipelines."
 readme = "README.md"
-requires-python = ">=3.10"
+requires-python = ">=3.11"
 license = "BSD-3-Clause"
 license-files = ["LICENSE*"]
 
@@ -26,9 +26,9 @@ keywords = [
 ]
 
 classifiers = [
+  "Development Status :: 4 - Beta",
   "Programming Language :: Python :: 3",
   "Programming Language :: Python :: 3 :: Only",
-  "Programming Language :: Python :: 3.10",
   "Programming Language :: Python :: 3.11",
   "Programming Language :: Python :: 3.12",
   "Programming Language :: Python :: 3.13",
@@ -104,6 +104,9 @@ build-backend = "setuptools.build_meta"
 ######################################
 [tool.setuptools.packages.find]
 where = ["src"]
+
+[tool.setuptools.package-data]
+eb_examples = ["py.typed"]
 
 ######################################
 # Pytest configuration
