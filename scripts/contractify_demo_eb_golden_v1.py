@@ -9,7 +9,7 @@ Outputs:
 
 Implementation notes:
 - Uses the canonical QSR interval adapter from eb-adapters:
-    eb_adapters.contracts.demand_panel.v1.qsr.entity_usage_interval_panel.to_panel_demand_v1
+    eb_adapters.to_panel_demand_v1
 - Normalizes demo semantics into eb-contracts semantics, notably:
     structural_zero == True => y must be NA
     structural_zero == True => is_observable must not be True
@@ -21,7 +21,8 @@ import argparse
 
 import pandas as pd
 
-from eb_examples.paths import GoldenV1Artifacts, resolve_base_dir
+from eb_adapters import QSRIntervalPanelDemandSpecV1, to_panel_demand_v1
+from eb_examples import GoldenV1Artifacts, load_demo_golden_v1, resolve_base_dir
 
 
 def _coerce_types(df: pd.DataFrame) -> pd.DataFrame:
@@ -116,14 +117,6 @@ def main() -> None:
 
     base_dir = resolve_base_dir(args.base_dir)
     artifacts = GoldenV1Artifacts(base=base_dir)
-
-    # Load via stable API (no hardcoded paths)
-    # Canonical adapter + spec from eb-adapters
-    from eb_adapters.contracts.demand_panel.v1.qsr.entity_usage_interval_panel import (
-        QSRIntervalPanelDemandSpecV1,
-        to_panel_demand_v1,
-    )
-    from eb_examples.datasets import load_demo_golden_v1
 
     df_raw = load_demo_golden_v1()
     df = _coerce_types(df_raw)

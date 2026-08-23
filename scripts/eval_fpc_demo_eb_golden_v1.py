@@ -9,9 +9,9 @@ Writes:
 - <base-dir>/diagnostics/fpc_v1.parquet
 
 Uses (eb-evaluation):
-- eb_evaluation.diagnostics.fpc.build_signals_from_series
-- eb_evaluation.diagnostics.fpc.classify_fpc
-- eb_evaluation.diagnostics.fpc.results_to_dict
+- eb_evaluation.build_signals_from_series
+- eb_evaluation.classify_fpc
+- eb_evaluation.results_to_dict
 
 Notes:
 - DQC MUST precede FPC in the pipeline; we require the DQC artifact exists.
@@ -27,13 +27,13 @@ import json
 
 import pandas as pd
 
-from eb_evaluation.diagnostics.fpc import (
+from eb_evaluation import (
     FPCThresholds,
     build_signals_from_series,
     classify_fpc,
     results_to_dict,
 )
-from eb_examples.paths import GoldenV1Artifacts, resolve_base_dir
+from eb_examples import GoldenV1Artifacts, resolve_base_dir
 
 
 def _parse_args() -> argparse.Namespace:

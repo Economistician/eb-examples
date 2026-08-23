@@ -11,6 +11,7 @@ from __future__ import annotations
 
 from importlib.metadata import PackageNotFoundError, version
 
+from .datasets import load_demo_golden_v1
 from .paths import GoldenV1Artifacts, default_base_dir, resolve_base_dir
 
 
@@ -28,5 +29,6 @@ __all__ = [
     "GoldenV1Artifacts",
     "__version__",
     "default_base_dir",
+    "load_demo_golden_v1",
     "resolve_base_dir",
 ]

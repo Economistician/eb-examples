@@ -9,9 +9,9 @@ Writes:
 - <base-dir>/diagnostics/fas_v1.parquet
 
 Uses:
-- eb_evaluation.diagnostics.fas.slice_keys
-- eb_evaluation.diagnostics.fas.compute_error_anatomy
-- eb_evaluation.diagnostics.fas.build_fas_surface
+- eb_evaluation.slice_keys
+- eb_evaluation.compute_error_anatomy
+- eb_evaluation.build_fas_surface
 
 Notes:
 - FAS is informative-only (no gating, no adjustment).
@@ -25,13 +25,13 @@ import argparse
 
 import pandas as pd
 
-from eb_evaluation.diagnostics.fas import (
+from eb_evaluation import (
     FASThresholds,
     build_fas_surface,
     compute_error_anatomy,
     slice_keys,
 )
-from eb_examples.paths import GoldenV1Artifacts, resolve_base_dir
+from eb_examples import GoldenV1Artifacts, resolve_base_dir
 
 
 def _parse_args() -> argparse.Namespace:

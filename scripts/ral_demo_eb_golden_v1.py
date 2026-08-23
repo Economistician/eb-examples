@@ -24,7 +24,7 @@ import argparse
 
 import pandas as pd
 
-from eb_examples.paths import GoldenV1Artifacts, resolve_base_dir
+from eb_examples import GoldenV1Artifacts, resolve_base_dir
 
 
 def _parse_args() -> argparse.Namespace:

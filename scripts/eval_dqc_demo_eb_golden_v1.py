@@ -8,8 +8,8 @@ Writes:
 - <base-dir>/diagnostics/dqc_v1.parquet
 
 Uses:
-- eb_evaluation.diagnostics.dqc.classify_dqc
-- eb_evaluation.diagnostics.dqc.dqc_to_dict
+- eb_evaluation.classify_dqc
+- eb_evaluation.dqc_to_dict
 
 Notes:
 - DQC is structural and diagnostic-only (no gating, no adjustment).
@@ -23,8 +23,8 @@ import argparse
 
 import pandas as pd
 
-from eb_evaluation.diagnostics.dqc import DQCThresholds, classify_dqc, dqc_to_dict
-from eb_examples.paths import GoldenV1Artifacts, resolve_base_dir
+from eb_evaluation import DQCThresholds, classify_dqc, dqc_to_dict
+from eb_examples import GoldenV1Artifacts, resolve_base_dir
 
 
 def _parse_args() -> argparse.Namespace:

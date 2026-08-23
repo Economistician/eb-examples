@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Golden-path scripts import exclusively from public package roots.
 - Rephrased demo script headers to imperative voice.
 - Changelog version header now matches `pyproject.toml` (`0.2.0`).
 

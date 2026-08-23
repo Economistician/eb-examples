@@ -14,7 +14,7 @@ Strategy:
 
 Validation:
 - Uses eb-contracts point forecast contract:
-    eb_contracts.api.validate.panel_point_forecast_v1
+    eb_contracts.panel_point_forecast_v1
   which expects columns: entity_id, interval_start, y_true, y_pred
 """
 
@@ -24,7 +24,7 @@ import argparse
 
 import pandas as pd
 
-from eb_examples.paths import GoldenV1Artifacts, resolve_base_dir
+from eb_examples import GoldenV1Artifacts, resolve_base_dir
 
 
 def _make_entity_id(site_id: object, forecast_entity_id: object) -> str:
@@ -107,7 +107,7 @@ def main() -> None:
     )
 
     # Validate + construct contract object (raises on violation)
-    from eb_contracts.api.validate import panel_point_forecast_v1
+    from eb_contracts import panel_point_forecast_v1
 
     panel = panel_point_forecast_v1(fcst)
 
