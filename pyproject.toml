@@ -3,7 +3,7 @@
 ######################################
 [project]
 name = "eb-examples"
-version = "0.2.0"
+version = "0.2.1"
 description = "Electric Barometer: runnable examples, demo datasets, and end-to-end golden-path pipelines."
 readme = "README.md"
 requires-python = ">=3.11"
@@ -46,12 +46,12 @@ dependencies = [
   # Keep broad; users can choose their backend, but pyarrow is the clean default.
   "pyarrow>=14.0",
 
-  # Electric Barometer System Release 0.2.9 pins
-  "eb-contracts==0.2.2",
-  "eb-metrics==0.2.8",
-  "eb-evaluation==0.2.9",
-  "eb-adapters==0.2.4",
-  "electric-barometer==0.2.9",
+  # Electric Barometer System Release 0.2.10 pins
+  "eb-contracts==0.2.3",
+  "eb-metrics==0.2.9",
+  "eb-evaluation==0.2.10",
+  "eb-adapters==0.2.5",
+  "electric-barometer==0.2.10",
 ]
 
 ######################################

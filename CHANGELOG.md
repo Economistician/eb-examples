@@ -7,9 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.2.1] - 2026-08-24
+
 ### Changed
 
 - Golden-path demo dataset and scripts use warehouse source column names (`FORECAST_ENTITY_KEY`, `BUSINESS_DATE`, `INTERVAL_INDEX`, `INTERVAL_INDEX_START_TIME`, `IS_DATE_OBSERVABLE`).
+- Pinned sibling packages to System Release 0.2.10, including `electric-barometer==0.2.10`.
 
 ## [0.2.0] - 2026-08-23
 
