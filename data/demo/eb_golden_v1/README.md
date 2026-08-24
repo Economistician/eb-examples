@@ -32,7 +32,7 @@ scaffolding) without relying on proprietary or brand-specific data.
 
 ## Structure
 
-- Interval granularity: **30 minutes** (INTERVAL_30_INDEX = 0–47)
+- Interval granularity: **30 minutes** (INTERVAL_INDEX = 0–47)
 - Multiple stores and forecast entities (commodities)
 - Generic entity names (e.g., `BEEF_PATTY`, `CHICKEN_STRIPS`)
 - No brand-specific or proprietary terminology
@@ -42,7 +42,7 @@ scaffolding) without relying on proprietary or brand-specific data.
 ## Observability & Future Scaffold
 
 - **Historical periods**
-  - IS_DAY_OBSERVABLE = True
+  - IS_DATE_OBSERVABLE = True
   - Intervals mostly observable, with rare missingness
 - **Structural zeros**
   - Closed periods use DEMAND_QTY = 0

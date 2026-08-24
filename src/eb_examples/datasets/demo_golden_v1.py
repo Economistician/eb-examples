@@ -49,7 +49,7 @@ def load_demo_golden_v1(*, as_dataframe: bool = True) -> pd.DataFrame:
     Notes:
     - Identifier columns are forced to string to preserve leading zeros.
     - DEMAND_QTY is nullable and will be float dtype in pandas when missing exists.
-    - INTERVAL_30_INDEX loads as int64.
+    - INTERVAL_INDEX loads as int64.
     - Temporal fields load as strings (caller may parse if needed).
     """
     paths = demo_golden_v1_paths()
@@ -64,19 +64,19 @@ def load_demo_golden_v1(*, as_dataframe: bool = True) -> pd.DataFrame:
         paths.raw_csv_gz,
         dtype={
             "STORE_ID": "string",
-            "FORECAST_ENTITY_ID": "string",
+            "FORECAST_ENTITY_KEY": "string",
             "FORECAST_ENTITY_NAME": "string",
-            "BUSINESS_DAY": "string",
-            "INTERVAL_START_TS": "string",
+            "BUSINESS_DATE": "string",
+            "INTERVAL_INDEX_START_TIME": "string",
         },
     )
 
     # Type normalization
-    if "INTERVAL_30_INDEX" in df.columns:
-        df["INTERVAL_30_INDEX"] = df["INTERVAL_30_INDEX"].astype("int64")
+    if "INTERVAL_INDEX" in df.columns:
+        df["INTERVAL_INDEX"] = df["INTERVAL_INDEX"].astype("int64")
 
     for c in [
-        "IS_DAY_OBSERVABLE",
+        "IS_DATE_OBSERVABLE",
         "IS_INTERVAL_OBSERVABLE",
         "IS_STRUCTURAL_ZERO",
         "HAS_DEMAND",

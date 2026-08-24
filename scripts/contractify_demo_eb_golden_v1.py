@@ -33,20 +33,22 @@ def _coerce_types(df: pd.DataFrame) -> pd.DataFrame:
     out = df.copy()
 
     # IDs as strings (preserve leading zeros)
-    for c in ["STORE_ID", "FORECAST_ENTITY_ID", "FORECAST_ENTITY_NAME"]:
+    for c in ["STORE_ID", "FORECAST_ENTITY_KEY", "FORECAST_ENTITY_NAME"]:
         if c in out.columns:
             out[c] = out[c].astype("string")
 
     # Dates/timestamps
-    if "BUSINESS_DAY" in out.columns:
-        out["BUSINESS_DAY"] = pd.to_datetime(out["BUSINESS_DAY"], errors="raise").dt.date
+    if "BUSINESS_DATE" in out.columns:
+        out["BUSINESS_DATE"] = pd.to_datetime(out["BUSINESS_DATE"], errors="raise").dt.date
 
-    if "INTERVAL_START_TS" in out.columns:
-        out["INTERVAL_START_TS"] = pd.to_datetime(out["INTERVAL_START_TS"], errors="raise")
+    if "INTERVAL_INDEX_START_TIME" in out.columns:
+        out["INTERVAL_INDEX_START_TIME"] = pd.to_datetime(
+            out["INTERVAL_INDEX_START_TIME"], errors="raise"
+        )
 
     # Interval index
-    if "INTERVAL_30_INDEX" in out.columns:
-        out["INTERVAL_30_INDEX"] = out["INTERVAL_30_INDEX"].astype("int64")
+    if "INTERVAL_INDEX" in out.columns:
+        out["INTERVAL_INDEX"] = out["INTERVAL_INDEX"].astype("int64")
 
     # Demand qty (nullable numeric)
     if "DEMAND_QTY" in out.columns:
@@ -54,7 +56,7 @@ def _coerce_types(df: pd.DataFrame) -> pd.DataFrame:
 
     # Flags -> nullable boolean semantics are handled by adapter; here we keep bool clean.
     for c in [
-        "IS_DAY_OBSERVABLE",
+        "IS_DATE_OBSERVABLE",
         "IS_INTERVAL_OBSERVABLE",
         "IS_STRUCTURAL_ZERO",
         "HAS_DEMAND",
@@ -95,8 +97,8 @@ def _normalize_to_contract_semantics(df: pd.DataFrame) -> pd.DataFrame:
             out.loc[structural, "IS_INTERVAL_OBSERVABLE"] = False
 
         # Optional: if you ever fall back to day observability, keep it consistent too
-        if "IS_DAY_OBSERVABLE" in out.columns:
-            out.loc[structural, "IS_DAY_OBSERVABLE"] = False
+        if "IS_DATE_OBSERVABLE" in out.columns:
+            out.loc[structural, "IS_DATE_OBSERVABLE"] = False
 
     return out
 
@@ -125,13 +127,13 @@ def main() -> None:
     # Configure adapter for this demo dataset
     spec = QSRIntervalPanelDemandSpecV1(
         site_col="STORE_ID",
-        forecast_entity_col="FORECAST_ENTITY_ID",
-        business_day_col="BUSINESS_DAY",
-        interval_index_col="INTERVAL_30_INDEX",
-        interval_start_ts_col="INTERVAL_START_TS",
+        forecast_entity_col="FORECAST_ENTITY_KEY",
+        business_day_col="BUSINESS_DATE",
+        interval_index_col="INTERVAL_INDEX",
+        interval_start_ts_col="INTERVAL_INDEX_START_TIME",
         y_source_col="DEMAND_QTY",
         is_interval_observable_col="IS_INTERVAL_OBSERVABLE",
-        is_day_observable_col="IS_DAY_OBSERVABLE",
+        is_day_observable_col="IS_DATE_OBSERVABLE",
         is_structural_zero_col="IS_STRUCTURAL_ZERO",
         is_possible_col=None,  # derive per adapter default
         impute_zero_when_observable=False,

@@ -73,8 +73,8 @@ def main() -> None:
         "forecast_entity_id",
         "y",
         "is_observable",
-        "INTERVAL_START_TS",
-        "INTERVAL_30_INDEX",
+        "INTERVAL_INDEX_START_TIME",
+        "INTERVAL_INDEX",
     }
     missing = sorted(demand_required - set(demand.columns))
     if missing:
@@ -93,7 +93,7 @@ def main() -> None:
     work = demand.copy()
     work["entity_id"] = work["site_id"].astype(str) + "::" + work["forecast_entity_id"].astype(str)
 
-    work["interval_start"] = pd.to_datetime(work["INTERVAL_START_TS"], errors="raise")
+    work["interval_start"] = pd.to_datetime(work["INTERVAL_INDEX_START_TIME"], errors="raise")
     fcst2 = fcst.copy()
     fcst2["interval_start"] = pd.to_datetime(fcst2["interval_start"], errors="raise")
 
@@ -114,7 +114,7 @@ def main() -> None:
         mode,
         site_col="site_id",
         entity_col="forecast_entity_id",
-        interval_col="INTERVAL_30_INDEX",
+        interval_col="INTERVAL_INDEX",
     )
 
     anatomy = compute_error_anatomy(

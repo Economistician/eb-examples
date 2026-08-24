@@ -85,13 +85,13 @@ def main() -> None:
                     rows.append(
                         {
                             "STORE_ID": store_id,
-                            "FORECAST_ENTITY_ID": fe_id,
+                            "FORECAST_ENTITY_KEY": fe_id,
                             "FORECAST_ENTITY_NAME": fe_name,
-                            "BUSINESS_DAY": business_day.isoformat(),
-                            "INTERVAL_30_INDEX": idx,
-                            "INTERVAL_START_TS": ts.isoformat(),
+                            "BUSINESS_DATE": business_day.isoformat(),
+                            "INTERVAL_INDEX": idx,
+                            "INTERVAL_INDEX_START_TIME": ts.isoformat(),
                             "DEMAND_QTY": demand_qty,
-                            "IS_DAY_OBSERVABLE": True,
+                            "IS_DATE_OBSERVABLE": True,
                             "IS_INTERVAL_OBSERVABLE": is_observable,
                             "IS_STRUCTURAL_ZERO": is_structural_zero,
                             "HAS_DEMAND": has_demand,
