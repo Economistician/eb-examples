@@ -5,17 +5,17 @@ Exits non-zero after a bounded timeout so CI fails closed on unpublished system-
 
 from __future__ import annotations
 
+import http.client
 import json
 from pathlib import Path
 import re
 import sys
 import time
 import tomllib
-import urllib.error
-import urllib.request
+from urllib.parse import quote
 
-PIN_RE = re.compile(r"^([A-Za-z0-9][A-Za-z0-9._-]*)==([^;\s]+)")
-PYPI_JSON = "https://pypi.org/pypi/{name}/{version}/json"
+PIN_RE = re.compile(r"^([A-Za-z0-9][A-Za-z0-9._-]*)==([A-Za-z0-9][A-Za-z0-9._-]*)")
+PYPI_HOST = "pypi.org"
 TIMEOUT_S = 600
 INITIAL_SLEEP_S = 5
 MAX_SLEEP_S = 40
@@ -33,26 +33,32 @@ def _exact_pins(pyproject: Path) -> list[tuple[str, str]]:
 
 
 def _exists_on_pypi(name: str, version: str) -> bool:
-    url = PYPI_JSON.format(name=name, version=version)
-    req = urllib.request.Request(
-        url,
-        headers={"Accept": "application/json", "User-Agent": "eb-examples-ci"},
-    )
+    path = f"/pypi/{quote(name, safe='')}/{quote(version, safe='')}/json"
+    conn = http.client.HTTPSConnection(PYPI_HOST, timeout=HTTP_TIMEOUT_S)
     try:
-        with urllib.request.urlopen(req, timeout=HTTP_TIMEOUT_S) as resp:
-            payload = json.load(resp)
+        conn.request(
+            "GET",
+            path,
+            headers={"Accept": "application/json", "User-Agent": "eb-examples-ci"},
+        )
+        resp = conn.getresponse()
+        body = resp.read()
+        if resp.status == 404:
+            return False
+        if resp.status != 200:
+            print(
+                f"PyPI HTTP {resp.status} for {name}=={version}; treating as unavailable",
+                file=sys.stderr,
+            )
+            return False
+        payload = json.loads(body.decode("utf-8"))
         urls = payload.get("urls")
         return isinstance(urls, list) and bool(urls)
-    except urllib.error.HTTPError as exc:
-        if exc.code == 404:
-            return False
-        print(
-            f"PyPI HTTP {exc.code} for {name}=={version}; treating as unavailable", file=sys.stderr
-        )
+    except (OSError, TimeoutError, json.JSONDecodeError, http.client.HTTPException) as exc:
+        print(f"PyPI request failed for {name}=={version}: {exc}", file=sys.stderr)
         return False
-    except urllib.error.URLError as exc:
-        print(f"PyPI request failed for {name}=={version}: {exc.reason}", file=sys.stderr)
-        return False
+    finally:
+        conn.close()
 
 
 def main() -> int:
