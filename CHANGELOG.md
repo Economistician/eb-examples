@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+
+- CI waits for exact sibling package pins to exist on PyPI before running the PR gate, avoiding install failures during coordinated system releases.
+
 ## [0.2.1] - 2026-08-24
 
 ### Changed

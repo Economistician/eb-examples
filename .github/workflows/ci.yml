@@ -22,7 +22,17 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  pypi-pins:
+    name: wait for PyPI pins
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - name: Wait for exact runtime pins on PyPI
+        run: python3 .github/scripts/wait_for_pypi_pins.py
+
   ci:
+    needs: pypi-pins
     permissions:
       contents: read
       packages: read
